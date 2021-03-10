@@ -1,0 +1,19 @@
+{
+  "name": "esmb",
+  "version": "1.0.4",
+  "description": "The fastest way to run a shared ES6 module, from a bookmark!",
+  "main": "editor.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lcfvs/esmb.git"
+  },
+  "author": "Lcf.vs",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Lcfvs/esmb/issues"
+  },
+  "homepage": "https://github.com/Lcfvs/esmb#readme"
+}

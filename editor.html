@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <link href="https://github.com/Lcfvs/esmb/blob/gh-pages/LICENSE" rel="license">
+  <meta name="referrer" content="no-referrer">
+  <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+  <title>esmb editor</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/codemirror.min.css"
+        integrity="sha512-9VgBnmEYUpZ041Fz5LvsEsFlEzAlUw6Ku5uPhNSKgqY4DgM+g8BRoYvfbfDcTqs3BPsREBB3ccVVlkCSLZ5T+Q=="
+        crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/addon/dialog/dialog.min.css"
+        integrity="sha512-Vogm+Cii1SXP5oxWQyPdkA91rHB776209ZVvX4C/i4ypcfBlWVRXZGodoTDAyyZvO36JlTqDqkMhVKAYc7CMjQ=="
+        crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/addon/hint/show-hint.min.css"
+        integrity="sha512-OmcLQEy8iGiD7PSm85s06dnR7G7C9C0VqahIPAj/KHk5RpOCmnC6R2ob1oK4/uwYhWa9BF1GC6tzxsC8TIx7Jg=="
+        crossorigin="anonymous">
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/addon/scroll/simplescrollbars.min.css"
+        integrity="sha512-2y3NTsei81d5emn5nwrdflyI5EGULwKXRZ0BCbO55cjgQ8x62X4ydH/jbnzrKnxArstf79F9n6z1j2MtVmJ8YA=="
+        crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/addon/tern/tern.min.css"
+        integrity="sha512-1sgoyWh9WoZ2BVDuNqKPZPyr5IP1x2UOEF64cCtm6lOTCqCpWb30EyjWHR/vypopSdIVJ/dfabYRPAO+gXbviQ=="
+        crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/theme/moxer.min.css"
+        media="(prefers-color-scheme: dark)"
+        integrity="sha512-zrCGHGmTpiZpzVJ6BdiDfsUT6t8+oOKmOtfU82GhBo/7sk/cns7phhKXSWmGH6uACPqgjP8QmgczNBY7HMB9TQ=="
+        crossorigin="anonymous">
+  <style>
+    textarea, .CodeMirror {
+      position: fixed;
+      width: 100vw;
+      height: 100vh;
+      left: 0;
+      top: 0
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/codemirror.min.js"
+          integrity="sha512-vEtV6ymm5qJIMeVd4oc8U+hCYMYDr7zksWF7xAFghGCfpUZh/Ht5lqAALPn1kixhsMLUTji4pycQB01ZuEPZtQ=="
+          crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/mode/javascript/javascript.min.js"
+          integrity="sha512-uJ2+YVBA3413of09m7nGj0GeNquSQvHlGS9kx12CQg4wiFO8b81lfaBifN8zicYMQ/eGag8UJR/IFXl9ByJ8nA=="
+          crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/addon/scroll/simplescrollbars.min.js"
+          integrity="sha512-xfrhnaAbPQbVlhM55XyecPDoR+13SnnMGmyNTJ6YthlR5Q8AbaVZYl7iRRCc+Na3lh4CeiI3aaOpBkCYBrDg0w=="
+          crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/addon/dialog/dialog.min.js"
+          integrity="sha512-sSpH/jVpLw4soNP/LN5k/m8yP28nkrqPboPL0DYw+HreBXQS9Q/HYjPqsS2zHs/TDfqowQWEWdZMnRV5uoJbSg=="
+          crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/addon/display/autorefresh.min.js"
+          integrity="sha512-vAsKB7xXQAWMn5kcwda0HkFVKUxSYwrmrGprVhmbGFNAG1Ij+2epT3zzdwjHTJyDsKXsiEdrUdhIxh7loHyX+A=="
+          crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/addon/display/placeholder.min.js"
+          integrity="sha512-5wzKjbvsq0uPbtmQ1/91r9MMGXOOtytkl5XCjjjnlq+rSw5/MF/r7XifwoR1inw9zYAzOncOxoHz4yu14vdMRA=="
+          crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/addon/hint/show-hint.min.js"
+          integrity="sha512-A53oruUE1OW/W2aXz3qNaetlBZrxrNIIPa+QWVMklvC9L0QOtrJ4H9HvZU4rmZxaZf01gmCMcUYaTrKZCPgS9w=="
+          crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/addon/tern/tern.min.js"
+          integrity="sha512-kwLy/MXJWYaJ4IRr2tLQC3XprCo2k0oT09y9I8aD5eiJ18uJ6rqlYvoevyVxRM+PiMBUXfTZolmH5Fe9UDE1Fg=="
+          crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/acorn/dist/acorn.js"
+          integrity="sha384-p2YWyVp4z8l3SMycCSBeX7ZV9Lgy6FkarXGCUPERddOyWOM3Dr+fYt/aEKW1LR7y"
+          crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/acorn-loose/dist/acorn-loose.js"
+          integrity="sha384-oU46fNwM9M9nU30eEYX/HMvyrmK9gGxS082m/igVJ1yMMKbzt4sKu3xxhHHUdT1N"
+          crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/acorn-walk/dist/walk.js"
+          integrity="sha384-1J4FYqzzIU/LUK/yudmKwXxyitDM8UNkkGTNltMYJAIL8IZwSCmRdaQRgt6zed4c"
+          crossorigin="anonymous"></script>
+  <script src="https://ternjs.net/doc/demo/polyfill.js"
+          integrity="sha384-CcQOz4PJSxTjTSKVdaeTIFQUNdECz+fhDG6WZo+9XxDoKX+XS5lb7w2PwrxlQeCD"
+          crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/tern/lib/signal.js"
+          integrity="sha384-LthBasZX8Wo1XxiI6NxQX79j6o1ZI4Ltr8d6qvE0GZP5mipY5GHszi3V80i/LhAb"
+          crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/tern/lib/tern.js"
+          integrity="sha384-OMxDt97ZxHVTGbvS9FONVaaK8v0X4T0tpSA9no9b3KkvOIapVqf4DyfGP3ECEka7"
+          crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/tern/lib/def.js"
+          integrity="sha384-kz7mSFfUVUCN/P/NwAmmICxQmw6ZSfeaIlTOMLs0AS7MLyh8TK7YuB2I51F/L0PG"
+          crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/tern/lib/comment.js"
+          integrity="sha384-bk1DCNzqlOU5aSOICdVgcz4GDNKZUhGYubeC66t52CmKqViD24yvhL/SY92tpW15"
+          crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/tern/lib/infer.js"
+          integrity="sha384-0t9yQOvI4dPvJ5ZSOPtzpNKGWIxAu1F9V0tbGoMqHomOM8vUrESyQQGq9qn6CXaU"
+          crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/tern/plugin/doc_comment.js"
+          integrity="sha384-DgdIGlkl54Ge0a7RGIOjix9Re6ph2gEEWTpccRHtBurEYxLZDruSnbvkDzulmNIn"
+          crossorigin="anonymous"></script>
+  <script type="module">
+    (async () => {
+      const textarea = Object.assign(document.getElementsByTagName("textarea")[0], {
+        placeholder: [
+          '================================================',
+          '| WARNING: Be sure to run only trusted sources |',
+          '================================================',
+          ' * `CTRL + Enter`: run in the current window',
+          ' * `Alt + Enter`: run in the current window.opener',
+          ' * `Ctrl + Space`: Autocomplete',
+          ' * `Ctrl + O`: Find docs for the expression at the cursor',
+          ' * `Ctrl + I`: Find type at cursor',
+          ' * `Alt + .`: Jump to definition',
+          ' * `Alt + ,`: Jump back',
+          ' * `Ctrl + Q`: Rename variable',
+          ' * `Ctrl + .`: Select all occurrences of a variable'
+        ].join('\n')
+      })
+
+      const editor = CodeMirror.fromTextArea(textarea, {
+        autoRefresh: true,
+        lineNumbers: true,
+        mode: "javascript",
+        scrollbarStyle: "overlay",
+        theme: "moxer"
+      })
+
+      editor.focus()
+
+      function run(cm) {
+        const script = document.createElement("script")
+        const src = ["/* ", Date.now(), " */ ", cm.getValue()].join("")
+
+        document.body.append(Object.assign(script, {
+          src: URL.createObjectURL(new Blob([src], {
+            type: "text/javascript"
+          })),
+          type: "module"
+        }))
+
+        script.remove()
+      }
+
+      const response = await fetch("https://unpkg.com/tern/defs/ecmascript.json")
+      const data = await response.json()
+      const server = new CodeMirror.TernServer({ defs: [data] })
+
+      editor.setOption("extraKeys", {
+        "Ctrl-Enter": cm => run(cm),
+        "Ctrl-Space": cm => server.complete(cm),
+        "Ctrl-I": cm => server.showType(cm),
+        "Ctrl-O": cm => server.showDocs(cm),
+        "Alt-.": cm => server.jumpToDef(cm),
+        "Alt-,": cm => server.jumpBack(cm),
+        "Ctrl-Q": cm => server.rename(cm),
+        "Ctrl-.": cm => server.selectName(cm)
+      })
+
+      editor.on("cursorActivity", cm => server.updateArgHints(cm))
+    })()
+  </script>
+</head>
+<body>
+  <textarea placeholder=" "></textarea>
+</body>
+</html>
