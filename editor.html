@@ -59,35 +59,38 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/addon/tern/tern.min.js"
           integrity="sha512-kwLy/MXJWYaJ4IRr2tLQC3XprCo2k0oT09y9I8aD5eiJ18uJ6rqlYvoevyVxRM+PiMBUXfTZolmH5Fe9UDE1Fg=="
           crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/acorn/dist/acorn.js"
-          integrity="sha384-p2YWyVp4z8l3SMycCSBeX7ZV9Lgy6FkarXGCUPERddOyWOM3Dr+fYt/aEKW1LR7y"
+  <script src="https://unpkg.com/acorn@8.1.0/dist/acorn.js"
+          integrity="sha384-N930ALA+9Tts2naebDdEuEtUn5srlZqSlzL2en2rckTNBYQ/N0N1ITZWHVv17Y/a"
           crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/acorn-loose/dist/acorn-loose.js"
+  <script src="https://unpkg.com/acorn-loose@8.0.2/dist/acorn-loose.js"
           integrity="sha384-oU46fNwM9M9nU30eEYX/HMvyrmK9gGxS082m/igVJ1yMMKbzt4sKu3xxhHHUdT1N"
           crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/acorn-walk/dist/walk.js"
+  <script src="https://unpkg.com/acorn-walk@8.0.2/dist/walk.js"
           integrity="sha384-1J4FYqzzIU/LUK/yudmKwXxyitDM8UNkkGTNltMYJAIL8IZwSCmRdaQRgt6zed4c"
           crossorigin="anonymous"></script>
-  <script src="https://ternjs.net/doc/demo/polyfill.js"
-          integrity="sha384-CcQOz4PJSxTjTSKVdaeTIFQUNdECz+fhDG6WZo+9XxDoKX+XS5lb7w2PwrxlQeCD"
-          crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/tern/lib/signal.js"
+  <script src="https://unpkg.com/tern@0.24.3/lib/signal.js"
           integrity="sha384-LthBasZX8Wo1XxiI6NxQX79j6o1ZI4Ltr8d6qvE0GZP5mipY5GHszi3V80i/LhAb"
           crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/tern/lib/tern.js"
+  <script src="https://unpkg.com/tern@0.24.3/lib/tern.js"
           integrity="sha384-OMxDt97ZxHVTGbvS9FONVaaK8v0X4T0tpSA9no9b3KkvOIapVqf4DyfGP3ECEka7"
           crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/tern/lib/def.js"
+  <script src="https://unpkg.com/tern@0.24.3/lib/def.js"
           integrity="sha384-kz7mSFfUVUCN/P/NwAmmICxQmw6ZSfeaIlTOMLs0AS7MLyh8TK7YuB2I51F/L0PG"
           crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/tern/lib/comment.js"
+  <script src="https://unpkg.com/tern@0.24.3/lib/comment.js"
           integrity="sha384-bk1DCNzqlOU5aSOICdVgcz4GDNKZUhGYubeC66t52CmKqViD24yvhL/SY92tpW15"
           crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/tern/lib/infer.js"
+  <script src="https://unpkg.com/tern@0.24.3/lib/infer.js"
           integrity="sha384-0t9yQOvI4dPvJ5ZSOPtzpNKGWIxAu1F9V0tbGoMqHomOM8vUrESyQQGq9qn6CXaU"
           crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/tern/plugin/doc_comment.js"
+  <script src="https://unpkg.com/tern@0.24.3/plugin/doc_comment.js"
           integrity="sha384-DgdIGlkl54Ge0a7RGIOjix9Re6ph2gEEWTpccRHtBurEYxLZDruSnbvkDzulmNIn"
+          crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/tern@0.24.3/plugin/modules.js"
+          integrity="sha384-/uMFlC3hTgE1nE3AorIj6T28DI8nuU2whREWaknRbY7yrDgBlCAEC4daTuyhIh1Y"
+          crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/tern@0.24.3/plugin/es_modules.js"
+          integrity="sha384-48wmVu7ajZ699kBoNPBBHn4k5LHlNeMZi7ZJ17CqgI+etiljns0qkt6KGSJdyLeS"
           crossorigin="anonymous"></script>
   <script type="module">
     (async () => {
@@ -132,9 +135,12 @@
         script.remove()
       }
 
-      const response = await fetch("https://unpkg.com/tern/defs/ecmascript.json")
-      const data = await response.json()
-      const server = new CodeMirror.TernServer({ defs: [data] })
+      const browser = await (await fetch("https://unpkg.com/tern@0.24.3/defs/browser.json")).json()
+      const ecmascript = await (await fetch("https://unpkg.com/tern@0.24.3/defs/ecmascript.json")).json()
+      const server = new CodeMirror.TernServer({
+        defs: [ecmascript, browser],
+        plugins: ['doc_comment', 'modules', 'es_modules']
+      })
 
       editor.setOption("extraKeys", {
         "Ctrl-Enter": cm => run(cm),
