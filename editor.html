@@ -40,6 +40,9 @@
     body > .CodeMirror-hints.moxer li {
       color: #c2c6d6;
     }
+    body > .CodeMirror-hints.moxer .CodeMirror-hint-active {
+      color: #f3f4f7;
+    }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/codemirror.min.js"
           integrity="sha512-vEtV6ymm5qJIMeVd4oc8U+hCYMYDr7zksWF7xAFghGCfpUZh/Ht5lqAALPn1kixhsMLUTji4pycQB01ZuEPZtQ=="
@@ -109,8 +112,6 @@
           '| WARNING: Be sure to run only trusted sources |',
           '================================================',
           ' * `CTRL + Enter`: run in the current window',
-          ' * `Alt + Enter`: run in the current window.opener',
-          ' * `Ctrl + Space`: Autocomplete',
           ' * `Ctrl + O`: Find docs for the expression at the cursor',
           ' * `Ctrl + I`: Find type at cursor',
           ' * `Alt + .`: Jump to definition',
@@ -144,16 +145,32 @@
         script.remove()
       }
 
+      let pos
       const browser = await (await fetch("https://unpkg.com/tern@0.24.3/defs/browser.json")).json()
       const ecmascript = await (await fetch("https://unpkg.com/tern@0.24.3/defs/ecmascript.json")).json()
       const server = new CodeMirror.TernServer({
         defs: [ecmascript, browser],
-        plugins: ['doc_comment', 'modules', 'es_modules']
+        plugins: ['doc_comment', 'modules', 'es_modules'],
+        responseFilter (doc, query, request, error, data) {
+          const { list } = CodeMirror.hint.javascript(pos, editor)
+          const completions = data.completions.map(({ name, type }) => ({ name, type }))
+          const names = completions.map(({ name }) => name)
+
+          list.forEach(name => {
+            if (!names.includes(name)) {
+              completions.push({ name, type: typeof window[name] })
+            }
+          })
+
+          return {
+            ...data,
+            completions
+          }
+        }
       })
 
       editor.setOption("extraKeys", {
         "Ctrl-Enter": cm => run(cm),
-        "Ctrl-Space": cm => server.complete(cm),
         "Ctrl-I": cm => server.showType(cm),
         "Ctrl-O": cm => server.showDocs(cm),
         "Alt-.": cm => server.jumpToDef(cm),
@@ -166,7 +183,15 @@
 
       editor.on("keyup", function (cm, event) {
         if (!cm.state.completionActive && event.keyCode !== 13) {
-          CodeMirror.commands.autocomplete(cm, null, { completeSingle: false });
+          const getHint = (...args) => {
+            pos = args[0]
+
+            return server.getHint(...args)
+          }
+
+          getHint.async = true
+
+          CodeMirror.commands.autocomplete(cm, getHint, { completeSingle: false })
         }
       })
     })()
