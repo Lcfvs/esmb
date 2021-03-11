@@ -153,7 +153,7 @@
         plugins: ['doc_comment', 'modules', 'es_modules'],
         responseFilter (doc, query, request, error, data) {
           const { list } = CodeMirror.hint.javascript(pos, editor)
-          const completions = data.completions.map(({ name, type }) => ({ name, type }))
+          const completions = (data.completions || []).map(({ name, type }) => ({ name, type }))
           const names = completions.map(({ name }) => name)
 
           list.forEach(name => {
