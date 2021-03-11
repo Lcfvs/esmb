@@ -27,16 +27,28 @@
         integrity="sha512-zrCGHGmTpiZpzVJ6BdiDfsUT6t8+oOKmOtfU82GhBo/7sk/cns7phhKXSWmGH6uACPqgjP8QmgczNBY7HMB9TQ=="
         crossorigin="anonymous">
   <style>
-    textarea, .CodeMirror {
+    body > textarea, body > .CodeMirror {
       position: fixed;
       width: 100vw;
       height: 100vh;
       left: 0;
       top: 0
     }
+    body > .CodeMirror-hints.moxer {
+      background-color: #090a0f;
+    }
+    body > .CodeMirror-hints.moxer li {
+      color: #c2c6d6;
+    }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/codemirror.min.js"
           integrity="sha512-vEtV6ymm5qJIMeVd4oc8U+hCYMYDr7zksWF7xAFghGCfpUZh/Ht5lqAALPn1kixhsMLUTji4pycQB01ZuEPZtQ=="
+          crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/addon/hint/show-hint.min.js"
+          integrity="sha512-A53oruUE1OW/W2aXz3qNaetlBZrxrNIIPa+QWVMklvC9L0QOtrJ4H9HvZU4rmZxaZf01gmCMcUYaTrKZCPgS9w=="
+          crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.59.4/addon/hint/javascript-hint.min.js"
+          integrity="sha512-2zi+0HSB5MXoy+BenDX/EKjqN6eUnsG2Lh9cpx+Ckua3Yi2XupO8ife9VELSg8iR7AT98yHQNyyaAL4ImVHcoQ=="
           crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/mode/javascript/javascript.min.js"
           integrity="sha512-uJ2+YVBA3413of09m7nGj0GeNquSQvHlGS9kx12CQg4wiFO8b81lfaBifN8zicYMQ/eGag8UJR/IFXl9ByJ8nA=="
@@ -52,9 +64,6 @@
           crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/addon/display/placeholder.min.js"
           integrity="sha512-5wzKjbvsq0uPbtmQ1/91r9MMGXOOtytkl5XCjjjnlq+rSw5/MF/r7XifwoR1inw9zYAzOncOxoHz4yu14vdMRA=="
-          crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/addon/hint/show-hint.min.js"
-          integrity="sha512-A53oruUE1OW/W2aXz3qNaetlBZrxrNIIPa+QWVMklvC9L0QOtrJ4H9HvZU4rmZxaZf01gmCMcUYaTrKZCPgS9w=="
           crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/addon/tern/tern.min.js"
           integrity="sha512-kwLy/MXJWYaJ4IRr2tLQC3XprCo2k0oT09y9I8aD5eiJ18uJ6rqlYvoevyVxRM+PiMBUXfTZolmH5Fe9UDE1Fg=="
@@ -114,7 +123,7 @@
       const editor = CodeMirror.fromTextArea(textarea, {
         autoRefresh: true,
         lineNumbers: true,
-        mode: "javascript",
+        mode: { name: "javascript", globalVars: true, json: true },
         scrollbarStyle: "overlay",
         theme: "moxer"
       })
@@ -154,6 +163,12 @@
       })
 
       editor.on("cursorActivity", cm => server.updateArgHints(cm))
+
+      editor.on("keyup", function (cm, event) {
+        if (!cm.state.completionActive && event.keyCode !== 13) {
+          CodeMirror.commands.autocomplete(cm, null, { completeSingle: false });
+        }
+      })
     })()
   </script>
 </head>
