@@ -181,7 +181,7 @@
 
       editor.on("cursorActivity", cm => server.updateArgHints(cm))
 
-      editor.on("keyup", function (cm, event) {
+      editor.on("change", function (cm, event) {
         if (!cm.state.completionActive && event.keyCode !== 13) {
           const getHint = (...args) => {
             pos = args[0]
@@ -190,7 +190,6 @@
           }
 
           getHint.async = true
-
           CodeMirror.commands.autocomplete(cm, getHint, { completeSingle: false })
         }
       })
