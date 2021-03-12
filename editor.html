@@ -27,22 +27,29 @@
         integrity="sha512-zrCGHGmTpiZpzVJ6BdiDfsUT6t8+oOKmOtfU82GhBo/7sk/cns7phhKXSWmGH6uACPqgjP8QmgczNBY7HMB9TQ=="
         crossorigin="anonymous">
   <style>
-    body > textarea, body > .CodeMirror {
-      position: fixed;
-      width: 100vw;
-      height: 100vh;
-      left: 0;
-      top: 0
-    }
-    body > .CodeMirror-hints.moxer {
-      background-color: #090a0f;
-    }
-    body > .CodeMirror-hints.moxer li {
-      color: #c2c6d6;
-    }
-    body > .CodeMirror-hints.moxer .CodeMirror-hint-active {
-      color: #f3f4f7;
-    }
+      body > textarea, body > .CodeMirror {
+          position: fixed;
+          width: 100vw;
+          height: 100vh;
+          left: 0;
+          top: 0
+      }
+      body > .CodeMirror-Tern-tooltip {
+          margin-top: -1.5em;
+          margin-left: 1em;
+      }
+      body > .CodeMirror.cm-s-moxer ~ .CodeMirror-Tern-tooltip {
+          margin-top: -1.8em;
+      }
+      body > .CodeMirror-hints.moxer {
+          background-color: #090a0f;
+      }
+      body > .CodeMirror-hints.moxer li {
+          color: #c2c6d6;
+      }
+      body > .CodeMirror-hints.moxer .CodeMirror-hint-active {
+          color: #f3f4f7;
+      }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/codemirror.min.js"
           integrity="sha512-vEtV6ymm5qJIMeVd4oc8U+hCYMYDr7zksWF7xAFghGCfpUZh/Ht5lqAALPn1kixhsMLUTji4pycQB01ZuEPZtQ=="
@@ -67,6 +74,9 @@
           crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/addon/display/placeholder.min.js"
           integrity="sha512-5wzKjbvsq0uPbtmQ1/91r9MMGXOOtytkl5XCjjjnlq+rSw5/MF/r7XifwoR1inw9zYAzOncOxoHz4yu14vdMRA=="
+          crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/addon/edit/closebrackets.min.js"
+          integrity="sha384-wlumdMCmq3l9EevZhZTkk2ve71CKdAO/rv5CW696xAAi4ttOQUGzCgC7Gk3scAd/"
           crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/addon/tern/tern.min.js"
           integrity="sha512-kwLy/MXJWYaJ4IRr2tLQC3XprCo2k0oT09y9I8aD5eiJ18uJ6rqlYvoevyVxRM+PiMBUXfTZolmH5Fe9UDE1Fg=="
@@ -106,6 +116,8 @@
           crossorigin="anonymous"></script>
   <script type="module">
     (async () => {
+      const uncompleted = /(?:^|\.{3}|[\] (){}])$/
+
       const textarea = Object.assign(document.getElementsByTagName("textarea")[0], {
         placeholder: [
           '================================================',
@@ -122,11 +134,12 @@
       })
 
       const editor = CodeMirror.fromTextArea(textarea, {
+        autoCloseBrackets: true,
         autoRefresh: true,
         lineNumbers: true,
         mode: { name: "javascript", globalVars: true },
         scrollbarStyle: "overlay",
-        theme: "moxer"
+        theme: window.matchMedia("(prefers-color-scheme: dark)").matches ? "moxer" : "default"
       })
 
       editor.focus()
@@ -145,14 +158,13 @@
         script.remove()
       }
 
-      let pos
       const browser = await (await fetch("https://unpkg.com/tern@0.24.3/defs/browser.json")).json()
       const ecmascript = await (await fetch("https://unpkg.com/tern@0.24.3/defs/ecmascript.json")).json()
       const server = new CodeMirror.TernServer({
         defs: [ecmascript, browser],
         plugins: ['doc_comment', 'modules', 'es_modules'],
         responseFilter (doc, query, request, error, data) {
-          const { list } = CodeMirror.hint.javascript(pos, editor)
+          const { list } = CodeMirror.hint.javascript(editor)
           const completions = (data.completions || []).map(({ name, type }) => ({ name, type }))
           const names = completions.map(({ name }) => name)
 
@@ -181,16 +193,18 @@
 
       editor.on("cursorActivity", cm => server.updateArgHints(cm))
 
-      editor.on("change", function (cm, event) {
-        if (!cm.state.completionActive && event.keyCode !== 13) {
-          const getHint = (...args) => {
-            pos = args[0]
+      editor.on("change", cm => {
+        const script = cm.getValue()
 
-            return server.getHint(...args)
-          }
+        if (cm.state.completionActive) {
+          return
+        }
 
-          getHint.async = true
-          CodeMirror.commands.autocomplete(cm, getHint, { completeSingle: false })
+        const { line, ch } = cm.getCursor()
+        const current = script.split('\n')[line]
+
+        if (ch && !uncompleted.test(current.slice(0, ch))) {
+          CodeMirror.commands.autocomplete(cm, server.getHint, { completeSingle: false })
         }
       })
     })()
