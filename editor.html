@@ -116,7 +116,7 @@
           crossorigin="anonymous"></script>
   <script type="module">
     (async () => {
-      const uncompleted = /(?:^|\.{2,3}|[\] (){}])$/
+      const uncompleted = /(?:^|\.{2,3}|[\] (){},;<>!?:=^*+"`'#&|\/\\\-])$/
 
       const textarea = Object.assign(document.getElementsByTagName("textarea")[0], {
         placeholder: [
