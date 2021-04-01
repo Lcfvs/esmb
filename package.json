@@ -1,6 +1,6 @@
 {
   "name": "esmb",
-  "version": "1.5.1",
+  "version": "1.5.3",
   "description": "The fastest way to run a shared ES6 module, from a bookmark!",
   "main": "editor.html",
   "scripts": {

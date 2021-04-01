@@ -227,12 +227,11 @@
       }, { passive: true })
 
       document.querySelector('.share').addEventListener('click', () => {
-        const value = editor.getValue()
-        const url = new URL('https://unpkg.com/esmb@1.5.0/editor.html')
+        const url = new URL('https://unpkg.com/esmb@1.5.3/editor.html')
 
-        url.searchParams.set('code', value)
+        url.hash = editor.getValue()
 
-        location.href = url
+        location.href = `${url}`
       }, { passive: true })
     })()
   </script>
