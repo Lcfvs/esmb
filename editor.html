@@ -128,7 +128,7 @@
           crossorigin="anonymous"></script>
   <script type="module">
     (async () => {
-      const { searchParams } = new URL(location.href)
+      const { hash } = new URL(location.href)
       const uncompleted = /(?:^|\.{2,3}|[\] (){},;<>!?:=^*+"`'#&|\/\\\-])$/
 
       const textarea = Object.assign(document.getElementsByTagName("textarea")[0], {
@@ -144,7 +144,7 @@
           ' * `Ctrl + Q`: Rename variable',
           ' * `Ctrl + .`: Select all occurrences of a variable'
         ].join('\n'),
-        value: searchParams.get('code') ?? ''
+        value: decodeURIComponent((hash ?? '').slice(1))
       })
 
       const editor = CodeMirror.fromTextArea(textarea, {
@@ -227,11 +227,7 @@
       }, { passive: true })
 
       document.querySelector('.share').addEventListener('click', () => {
-        const url = new URL('https://unpkg.com/esmb@1.5.3/editor.html')
-
-        url.hash = editor.getValue()
-
-        location.href = `${url}`
+        location.hash = `#${encodeURIComponent(editor.getValue())}`
       }, { passive: true })
     })()
   </script>
