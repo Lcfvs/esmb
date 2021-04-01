@@ -144,7 +144,7 @@
           ' * `Ctrl + Q`: Rename variable',
           ' * `Ctrl + .`: Select all occurrences of a variable'
         ].join('\n'),
-        value: decodeURIComponent((hash ?? '').slice(1))
+        value: decodeURIComponent((hash ?? '').slice(1).replaceAll('+', ' '))
       })
 
       const editor = CodeMirror.fromTextArea(textarea, {
@@ -227,7 +227,7 @@
       }, { passive: true })
 
       document.querySelector('.share').addEventListener('click', () => {
-        location.hash = `#${encodeURIComponent(editor.getValue())}`
+        location.hash = `#${encodeURIComponent(editor.getValue()).replaceAll(' ', '+')}`
       }, { passive: true })
     })()
   </script>
