@@ -75,6 +75,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/mode/javascript/javascript.min.js"
           integrity="sha512-uJ2+YVBA3413of09m7nGj0GeNquSQvHlGS9kx12CQg4wiFO8b81lfaBifN8zicYMQ/eGag8UJR/IFXl9ByJ8nA=="
           crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/addon/hint/javascript-hint.min.js"
+          integrity="sha512-DpK50CnHKO+aTBvBlTDIcEjdhMeaa/zXk8/7Y/Swyc93YCkRuGMJFXxluwvtS3SUFcF47r8j73yPpuSdI+nyqw=="
+          crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.50.2/addon/scroll/simplescrollbars.min.js"
           integrity="sha512-xfrhnaAbPQbVlhM55XyecPDoR+13SnnMGmyNTJ6YthlR5Q8AbaVZYl7iRRCc+Na3lh4CeiI3aaOpBkCYBrDg0w=="
           crossorigin="anonymous"></script>
@@ -178,7 +181,7 @@
         defs: [ecmascript, browser],
         plugins: ['doc_comment', 'modules', 'es_modules'],
         responseFilter (doc, query, request, error, data) {
-          const { list } = CodeMirror.hint.javascript(editor)
+          const { list = [] } = CodeMirror.hint.javascript(editor) ?? {}
           const completions = (data.completions || []).map(({ name, type }) => ({ name, type }))
           const names = completions.map(({ name }) => name)
 
