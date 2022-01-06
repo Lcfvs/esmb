@@ -166,9 +166,7 @@
         const src = ["/* ", Date.now(), " */ ", cm.getValue()].join("")
 
         document.body.append(Object.assign(script, {
-          src: URL.createObjectURL(new Blob([src], {
-            type: "text/javascript"
-          })),
+          src: `data:text/javascript,${src}`,
           type: "module"
         }))
 
