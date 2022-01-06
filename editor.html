@@ -162,8 +162,10 @@
       editor.focus()
 
       function run(cm) {
+        const src = encodeURIComponent(["/* ", Date.now(), " */ ", cm.getValue()].join(""))
+        const { opener = window } = window
+        const { document } = opener
         const script = document.createElement("script")
-        const src = ["/* ", Date.now(), " */ ", cm.getValue()].join("")
 
         document.body.append(Object.assign(script, {
           src: `data:text/javascript,${src}`,
