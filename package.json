@@ -1,10 +1,11 @@
 {
   "name": "esmb",
-  "version": "1.5.9",
+  "version": "1.6.2",
   "description": "The fastest way to run a shared ES6 module, from a bookmark!",
   "main": "editor.html",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node test.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/Lcfvs/esmb/issues"
   },
-  "homepage": "https://github.com/Lcfvs/esmb#readme"
+  "homepage": "https://github.com/Lcfvs/esmb#readme",
+  "dependencies": {
+    "@etchedjs/etched": "^9.0.2"
+  }
 }
